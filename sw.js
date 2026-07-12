@@ -1,4 +1,4 @@
-const CACHE = 'mobius-storyboard-v2';
+const CACHE = 'mobius-storyboard-v4';
 const CORE = [
   './',
   './index.html',
@@ -37,8 +37,10 @@ self.addEventListener('fetch', function (e) {
   if (req.mode === 'navigate') {
     e.respondWith(
       fetch(req).then(function (res) {
-        const copy = res.clone();
-        caches.open(CACHE).then(function (c) { c.put('./index.html', copy); });
+        if (res && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then(function (c) { c.put('./index.html', copy); });
+        }
         return res;
       }).catch(function () {
         return caches.match('./index.html');
